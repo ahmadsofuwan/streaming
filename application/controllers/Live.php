@@ -16,6 +16,7 @@ class Live extends MY_Controller
 			$dataLive = $this->getDataRow('live', '*', array('pkey' => $idLive));
 		$dataLiveAll = $this->getDataRow('live', '*', array('status' => '1'));
 		$ads = $this->getDataRow('ads', '*', array('status' => '1'));
+		$adsLive = $this->getDataRow('adslive', '*', array('status' => '1'));
 		$menu = $this->getDataRow('menu', '*', array('status' => '1'));
 		$brand = $this->getDataRow('brand', '*', array('status' => '1'))[0];
 		$head = $this->getDataRow('head', '*', array('status' => '1'))[0];
@@ -25,6 +26,7 @@ class Live extends MY_Controller
 		$data['html']['head'] = $head;
 		$data['html']['brand'] = $brand;
 		$data['html']['menu'] = $menu;
+		$data['html']['adsLive'] = $adsLive;
 		$data['html']['ads'] = $ads;
 		$data['html']['dataLiveAll'] = $dataLiveAll;
 		$data['html']['dataLive'] = $dataLive[0];

@@ -31,6 +31,7 @@ $role = $this->session->userdata('role');
                 <h6 class="collapse-header">Control:</h6>
                 <a class="collapse-item" href="<?= base_url('Admin/brandList') ?>">Brand</a>
                 <a class="collapse-item" href="<?= base_url('Admin/adsList') ?>">Iklan</a>
+                <a class="collapse-item" href="<?= base_url('Admin/adsLiveList') ?>">Iklan Live</a>
                 <a class="collapse-item" href="<?= base_url('Admin/headList') ?>">Header Seo</a>
                 <a class="collapse-item" href="<?= base_url('Admin/contentList') ?>">Content</a>
                 <a class="collapse-item" href="<?= base_url('Admin/menuList') ?>">Menu</a>

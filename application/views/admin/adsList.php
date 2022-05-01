@@ -23,7 +23,7 @@
                 <td><?php echo $value['name'] ?></td>
                 <td><?php echo  $value['createname'] . ' | ' . $value['rolename'] ?></td>
                 <td><?php echo  date("d / m / Y  H:i", $value['time']) ?></td>
-                <td class="text-center"><input type="checkbox" class="form-check-input" name='status' value="<?php echo  $value['pkey'] ?>" <?php if (!empty($value['status'])) echo 'checked' ?>></td>
+                <td class="text-center"><input type="checkbox" class="form-check-input" name='status' value="<?php echo  $value['pkey'] ?>" <?php if (!empty($value['status'])) echo 'checked' ?> data-table='<?php echo $tableName ?>'></td>
                 <td class="text-center">
                     <img src="<?php echo base_url('uploads/' . $value['img']) ?>" class="rounded" alt="Logo" style="width: 80px;">
                 </td>
@@ -84,8 +84,11 @@
             }
         })
     })
+
     $('tbody').find('[name=status]').click(function() {
         var obj = $(this);
+        var tbl = obj.attr('data-table');
+        console.log(tbl);
         var value = $(obj).val();
         var arrCheckBox = $('tbody').find('input:checkbox');
         $.ajax({
@@ -93,7 +96,8 @@
                 type: 'POST',
                 data: {
                     action: 'statusAds',
-                    pkey: value
+                    pkey: value,
+                    table: tbl,
                 },
             })
             .done(function() {

@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
+    <!-- paksa ke https -->
+
+    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?php echo $head['html'] ?>
@@ -29,7 +31,10 @@
 <style>
     .navbar {
         box-shadow: 0 4px 10px 0 rgb(0 0 0 / 20%);
+    }
 
+    .hide {
+        display: none;
     }
 
     .list-streaming {
@@ -42,26 +47,43 @@
         height: 4em;
         width: 8em;
         margin: .2em .7em;
+    }
+
+    .content-panel {
+        height: 4em;
+        width: 8em;
+        margin: .2em .7em;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
         border-radius: 5px;
     }
 
-    .containers {
-        padding: 0 5%;
-    }
+
 
     .advertising .content-panel {
         width: 350px;
         height: 250px;
+        text-align: center;
         margin: auto;
-        /* margin-bottom: .7em;
-        margin-top: .7em; */
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
         border-radius: 0px;
+    }
+
+    .advertising-hide .content-panel-hide {
+        width: 728px;
+        height: 90px;
+        text-align: center;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .containers {
+        padding: 0 5%;
     }
 
     .slick-arrow {
@@ -113,22 +135,46 @@
         border-radius: 10px;
         width: 150px;
         text-align: center;
-        /* padding: 1.5em; */
     }
 
-    /* .video-js {
-        width: 500px;
-        height: 340px;
-    } */
+    .flex {
+        display: flex;
+        justify-content: space-between;
 
+    }
+
+    .flex-ads {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -moz-flex;
+        display: -webkit-flex;
+        display: flex;
+        display: flex;
+        justify-content: center;
+        width: 750px;
+        margin: 0 auto;
+
+    }
+
+    @media (max-width: 1500px) {
+
+
+        .advertising .content-panel {
+            width: 100%;
+        }
+
+        .flex-ads {
+            flex-direction: column;
+        }
+
+    }
+
+
+    @media (max-width: 1200px) {}
 
 
     @media (max-width: 1500px) {
-        /*    .video-js {
-            width: 170px;
-            height: 440px;
-            margin:auto;
-        } */
 
         .advertising .content-panel {
             width: 100%;
@@ -139,26 +185,20 @@
 
     @media (max-width: 987px) {
 
-        /*        .video-js {
-            width: 690px;
-            height: 340px;
-        } */
         .advertising .content-panel {
             width: 350px;
         }
 
         .advertising {
-
             margin-top: 2em;
         }
     }
 
     @media (max-width: 763px) {
-        /*      .video-js {
-            width: 510px;
-            height: 240px;
-        } */
-
+        .advertising-hide .content-panel-hide {
+            width: 370px;
+            height: 45px;
+        }
 
     }
 
@@ -175,36 +215,15 @@
             height: 300px;
         }
 
-        /* .video-js {
-            width: 455px;
-            height: 200px;
-        } */
+        .advertising-hide .content-panel-hide {
+            width: 230px;
+            height: 25px;
+        }
+
+
     }
 
-    @media (max-width: 437px) {
-        /* .video-js {
-            width: 430px;
-            height: 200px;
-        } */
-
-        /* .advertising .content-panel{
-            height: 4em;
-            background-size: contain;
-        } */
-    }
-
-
-    @media (max-width: 420px) {
-        /* .video-js {
-            width: 380px;
-            height: 200px;
-        } */
-
-        /* .advertising .content-panel{
-            height: 3em;
-            background-size: contain;
-        } */
-    }
+    @media (max-width: 437px) {}
 </style>
 
 <body>
@@ -258,16 +277,31 @@
                         <div class="col-lg-3" style="text-align: center;">
                             <div class="advertising">
                                 <div class="row">
-                                    <?php foreach ($ads as $adsKey => $adsValue) { ?>
-                                        <div class="col-sm-12 py-1">
-                                            <!-- <img src="<?php echo base_url('uploads/' . $adsValue['img']) ?>" alt=""> -->
-                                            <div class="content-panel" style="background-image:url(<?php echo base_url('uploads/' . $adsValue['img']) ?>)"></div>
-                                        </div>
+                                    <?php for ($i = 3; $i <= 5; $i++) { ?>
+                                        <?php if (!empty($ads[$i])) { ?>
+                                            <div class="col-sm-12 py-1">
+                                                <div class="content-panel"><a href="<?php echo $ads[$i]['link'] ?>" target="_blank"><img src="<?php echo base_url('uploads/' . $ads[$i]['img']) ?>" alt="" class="rounded "></a></div>
+                                            </div>
+                                        <?php } ?>
                                     <?php } ?>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 embed-responsive embed-responsive-4by3" style="text-align: center;">
+                            <div class="movetovideojs " style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 50px;margin: 0 auto;z-index: 103;">
+                                <div id="ads-hide1" class="advertising-hide hide">
+                                    <div style="text-align:right;padding-right:3em;"><a href="#" id="close-ads" onclick="closeAds()" style="cursor:pointer;"><img src="https://3.bp.blogspot.com/-ZZSacDHLWlM/VhvlKTMjbLI/AAAAAAAAF2M/UDzU4rrvcaI/s1600/btn_close.gif" style=""></a></div>
+                                    <div class="row" style="">
+                                        <?php foreach ($adsLive as $adsLiveKey => $adsLiveValue) { ?>
+                                            <div id="image-ads-<?php echo $adsLiveKey ?> " class="list-ads col py-1" style="">
+                                                <div class="content-panel-hide">
+                                                    <a href="<?php echo $adsLiveValue['link'] ?>" target="_blank"><img src="<?php echo base_url('uploads/') . $adsLiveValue['img'] ?>" alt="AdsLive" style="width: 100%;border-radius: 10px;border-style: solid;border-color:yellow"></a>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
                             <video autoplay="true" id="my-video" class="video-js embed-responsive-item" controls preload="auto" poster="<?php echo base_url('uploads/') . $dataLive['img'] ?>" data-setup="{}">
                                 <source src="<?php echo $dataLive['link'] ?>" type="application/x-mpegURL" />
                             </video>
@@ -275,18 +309,19 @@
                         <div class="col-lg-3" style="text-align: center;">
                             <div class="advertising">
                                 <div class="row">
-                                    <?php foreach ($ads as $adsKey => $adsValue) { ?>
-                                        <div class="col-sm-12 py-1">
-                                            <!-- <img src="<?php echo base_url('uploads/' . $adsValue['img']) ?>" alt=""> -->
-                                            <div class="content-panel" style="background-image:url(<?php echo base_url('uploads/' . $adsValue['img']) ?>)"></div>
-                                        </div>
+                                    <?php for ($i = 0; $i <= 2; $i++) { ?>
+                                        <?php if (!empty($ads[$i])) { ?>
+                                            <div class="col-sm-12 py-1">
+                                                <div class="content-panel"><a href="<?php echo $ads[$i]['link'] ?>" target="_blank"><img src="<?php echo base_url('uploads/' . $ads[$i]['img']) ?>" alt="" class="rounded "></a></div>
+                                            </div>
+                                        <?php } ?>
                                     <?php } ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="conatainer">
+                <div class="container">
                     <?php echo $content['content'] ?>
                 </div>
             </div>
@@ -299,7 +334,6 @@
                 <div class="row justify-content-center">
                     <div class="col heading">
                         <span>Power by NobarTV.</span>
-
                     </div>
                 </div>
             </div>
@@ -313,7 +347,69 @@
     </script>
     <script type="text/javascript" src="<?php echo base_url('asset/public/'); ?>js/slick.min.js"></script>
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        function closeAds() {
+            $('.list-ads').hide();
+            $('#close-ads').hide();
+        }
 
+        $(document).ready(function() {
+
+            var options = {
+                playbackRates: [1, 1.5, 2],
+                muted: true,
+            };
+
+            video = videojs('my-video', options);
+
+            $('.movetovideojs').appendTo($('#my-video'));
+
+            video.on('fullscreenchange', function() {
+
+                if (this.isFullscreen_) {
+
+                    $('#ads-hide1 ').show();
+                    $('#close-ads').show();
+                    $('.list-ads').show();
+                    // $('#image-ads-0 , #image-ads-1 , #image-ads-2').show();
+
+                    function showHide() {
+                        setTimeout(() => {
+                            $('#close-ads').show();
+                            $('.list-ads').show();
+
+                            // $('#image-ads-0 , #image-ads-1 , #image-ads-2').show();
+                            setTimeout(() => {
+                                $('#close-ads').hide();
+                                $('.list-ads').hide();
+
+                                // $('#image-ads-0 , #image-ads-1 , #image-ads-2').hide();
+
+                                showHide();
+                            }, 900000);
+
+                        }, 900000);
+
+                    }
+
+                    showHide();
+
+                } else {
+
+                    $('#ads-hide1').hide();
+                    $('.list-ads').hide();
+                    $('#close-ads').hide();
+                    // $('#image-ads-0 , #image-ads-1 , #image-ads-2').hide();
+                }
+
+            });
+
+
+
+
+        });
+    </script>
     <script type="text/javascript">
         $('.list-streaming').slick({
             dots: false,
@@ -348,8 +444,21 @@
 
             ]
         });
+        // setInterval(function() {
+        //     Swal.fire(
+        //         'Good job!',
+        //         'You clicked the button!',
+        //         'success'
+        //     )
+        // }, 5000);
     </script>
     <script src="https://vjs.zencdn.net/7.18.1/video.min.js"></script>
+    <div class="row" style="position: fixed;bottom: 50px;margin-left: 10%;margin-right: 10%;display: none;" id="sticky-ad">
+        <button class="text-light close-ads" aria-label="Close this ad" style="position: absolute; width: 28px; height: 28px; top: -28px; right: 0; border: none; border-radius: 12px 0 0 0;background: none;">X</button>
+        <div class="col-sm-6 py-1">
+            <a href="#" target="_blank"><img src="<?php echo base_url('uploads/1648544918.png') ?>" class="" alt="Ads" style="width: 100%;border-radius: 10px;border-style: solid;border-color:yellow"></a>
+        </div>
+    </div>
 </body>
 
 </html>

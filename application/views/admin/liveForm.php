@@ -26,18 +26,15 @@ if ($action == 'update')
 						<div class="form-group row">
 							<label for="link" class="col-sm-3 col-form-label">Link Streaming</label>
 							<div class="col-sm">
-								<input type="text" class="form-control" id="link" name="link" placeholder="Link Streaming" value="http://94.237.69.116:8080/hls/streamingkey.m3u8">
+								<input type="text" class="form-control" id="link" name="link" placeholder="Link Streaming" value="https://94.237.69.116:443/hls/streamingkey.m3u8">
 							</div>
 						</div>
-
 						<div class="form-group row">
 							<label for="img" class="col-sm-3 ">Logo Streaming</label>
 							<div class="col-sm">
 								<input type="file" class="form-control-file" id="img" name="img" accept=".jpg,.png,.jpeg">
 							</div>
 						</div>
-
-
 						<div class="form-group row mt-5">
 							<div class="col-sm">
 								<button type="submit" class="btn btn-primary btn-block">Submit</button>

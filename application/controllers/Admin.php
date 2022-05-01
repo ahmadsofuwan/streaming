@@ -117,6 +117,103 @@ class Admin extends MY_Controller
 		$this->template($data);
 	}
 
+	public function adsLiveList()
+	{
+		$tableName = 'adslive';
+		$join = array(
+			array('account', 'account.pkey=' . $tableName . '.createon', 'left'),
+			array('role', 'role.pkey=account.role', 'left'),
+		);
+		$select = '
+			' . $tableName . '.*,
+			account.name as createname,
+			account.role as createrole,
+			role.name as rolename,
+		';
+
+
+		$dataList = $this->getDataRow($tableName, $select, '', '', $join);
+		$data['html']['title'] = 'List Ads';
+		$data['html']['dataList'] = $dataList;
+		$data['html']['tableName'] = $tableName;
+		$data['html']['form'] = get_class($this) . '/adsLive';
+		$data['url'] = 'admin/adsList';
+		$this->template($data);
+	}
+
+	public function adsLive($id = '')
+	{
+		$tableName = 'adslive';
+		$tableDetail = '';
+		$baseUrl = get_class($this) . '/' . __FUNCTION__;
+		$detailRef = '';
+		$formData = array(
+			'pkey' => 'pkey',
+			'name' => 'name',
+			'createon' => 'sesionid',
+			'time' => 'time',
+			'link' => 'link',
+		);
+		$formDetail = array();
+
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+			if (empty($_POST['action'])) redirect(base_url($baseUrl . 'List'));
+			//validate form
+			$arrMsgErr = array();
+			if (empty($_POST['name']))
+				array_push($arrMsgErr, 'Nama Wajib Di isi');
+
+
+			if ($_POST['action'] == 'add')
+				if (empty($_FILES['imgAds']['name']))
+					array_push($arrMsgErr, "Gambar wajib Di isi");
+
+			$this->session->set_flashdata('arrMsgErr', $arrMsgErr);
+			//validate form
+			if (empty(count($arrMsgErr)))
+				switch ($_POST['action']) {
+					case 'add':
+						$refkey = $this->insert($tableName, $this->dataForm($formData));
+						$this->insertDetail($tableDetail, $formDetail, $refkey);
+						$upload = array(
+							'postname' => 'imgAds',
+							'tablename' => $tableName,
+							'colomname' => 'img',
+							'pkey' => $refkey,
+						);
+						$this->uploadImg($upload);
+						redirect(base_url($baseUrl . 'List')); //wajib terakhir
+						break;
+					case 'update':
+						$this->update($tableName, $this->dataForm($formData), array('pkey' => $_POST['pkey']));
+						$this->updateDetail($tableDetail, $formDetail, $detailRef, $id);
+						if (!empty($_FILES['imgAds']['name'])) {
+							$upload = array(
+								'postname' => 'imgAds',
+								'tablename' => $tableName,
+								'colomname' => 'img',
+								'pkey' => $_POST['pkey'],
+								'replace' => true,
+							);
+							$this->uploadImg($upload);
+						}
+						redirect(base_url($baseUrl . 'List'));
+						break;
+				}
+		}
+
+		if (!empty($id)) {
+			$dataRow = $this->getDataRow($tableName, '*', array('pkey' => $id), 1)[0];
+			$this->dataFormEdit($formData, $dataRow);
+		}
+
+		$data['html']['baseUrl'] = $baseUrl;
+		$data['html']['title'] = 'Input Data Iklan Live';
+		$data['html']['err'] = $this->genrateErr();
+		$data['url'] = 'admin/adsForm';
+		$this->template($data);
+	}
+
 	public function liveList()
 	{
 		$tableName = 'live';
@@ -634,11 +731,11 @@ class Admin extends MY_Controller
 				$this->update('link', array('status' => '1'), array('pkey' => $_POST['pkey']));
 				break;
 			case 'statusAds':
-				$oldststus = $this->getDataRow('ads', 'status', array('pkey' => $_POST['pkey']));
+				$oldststus = $this->getDataRow($_POST['table'], 'status', array('pkey' => $_POST['pkey']));
 				$status = '1';
 				if ($oldststus[0]['status'] == '1')
 					$status = '0';
-				$this->update('ads', array('status' => $status), array('pkey' => $_POST['pkey']));
+				$this->update($_POST['table'], array('status' => $status), array('pkey' => $_POST['pkey']));
 				break;
 			case 'statusLive':
 				$oldststus = $this->getDataRow('live', 'status', array('pkey' => $_POST['pkey']));

@@ -50,14 +50,15 @@ CREATE TABLE `ads` (
   `img` varchar(255) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
   KEY `pkey` (`pkey`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `ads` */
 
 insert  into `ads`(`pkey`,`name`,`status`,`createon`,`time`,`img`,`link`) values 
-(5,'aaaaaaaaaaaaa',1,1,'1648561807','1648561807.gif','aasscscascasc'),
-(6,'testing',1,1,'1649997266','1649997266.jpeg','aaaa'),
-(7,'araa',1,1,'1648562981','1648562981.gif','https://www.youtube.com/');
+(5,'aaaaaaaaaaaaa',1,1,'1650536822','1650536822.gif','aasscscascasc'),
+(6,'testing',1,1,'1650541623','1650541623.gif','aaaa'),
+(7,'araa',1,1,'1650541630','1650541630.gif','https://www.youtube.com/'),
+(8,'saca',1,1,'1650542787','1650542788.gif','scascasc');
 
 /*Table structure for table `brand` */
 
@@ -139,8 +140,8 @@ CREATE TABLE `live` (
 /*Data for the table `live` */
 
 insert  into `live`(`pkey`,`name`,`status`,`createon`,`time`,`img`,`link`) values 
-(9,'aaas',1,1,'1649784713','1649489305.jpg','http://94.237.75.137:8080/hls/test.m3u8'),
-(10,'tttttttt',1,1,'1649489311','1649489311.jpg','http://94.237.75.137:8080/hls/test2.m3u8'),
+(9,'aaas',1,1,'1651222251','1649489305.jpg','https://94.237.69.116:443/hls/test.m3u8'),
+(10,'tttttttt',1,1,'1651222570','1649489311.jpg','https://94.237.69.116:443/hls/test2.m3u8'),
 (11,'saassa',1,1,'1649595887','1649595887.jpg','http://94.237.75.137:8080/hls/streamingkey.m3u8'),
 (12,'asacascas',1,1,'1649595895','1649595895.jpg','http://94.237.75.137:8080/hls/streamingkey.m3u8'),
 (13,'ascascc',1,1,'1649595902','1649595903.jpg','http://94.237.75.137:8080/hls/streamingkey.m3u8'),
