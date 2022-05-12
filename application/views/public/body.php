@@ -289,18 +289,18 @@
                         </div>
                         <div class="col-lg-6 embed-responsive embed-responsive-4by3" style="text-align: center;">
                             <div class="movetovideojs " style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 50px;margin: 0 auto;z-index: 103;">
-                                <div id="ads-hide1" class="advertising-hide hide">
-                                    <div style="text-align:right;padding-right:3em;"><a href="#" id="close-ads" onclick="closeAds()" style="cursor:pointer;"><img src="https://3.bp.blogspot.com/-ZZSacDHLWlM/VhvlKTMjbLI/AAAAAAAAF2M/UDzU4rrvcaI/s1600/btn_close.gif" style=""></a></div>
-                                    <div class="row" style="">
-                                        <?php foreach ($adsLive as $adsLiveKey => $adsLiveValue) { ?>
-                                            <div id="image-ads-<?php echo $adsLiveKey ?> " class="list-ads col py-1" style="">
+                                <?php if (!empty($dataLive['linkads']) && !empty($dataLive['ads'])) { ?>
+                                    <div id="ads-hide1" class="advertising-hide hide">
+                                        <div style="text-align:right;padding-right:3em;"><a href="#" id="close-ads" onclick="closeAds()" style="cursor:pointer;"><img src="https://3.bp.blogspot.com/-ZZSacDHLWlM/VhvlKTMjbLI/AAAAAAAAF2M/UDzU4rrvcaI/s1600/btn_close.gif" style=""></a></div>
+                                        <div class="row">
+                                            <div id="image-ads-1" class="list-ads col py-1">
                                                 <div class="content-panel-hide">
-                                                    <a href="<?php echo $adsLiveValue['link'] ?>" target="_blank"><img src="<?php echo base_url('uploads/') . $adsLiveValue['img'] ?>" alt="AdsLive" style="width: 100%;border-radius: 10px;border-style: solid;border-color:yellow"></a>
+                                                    <a href="<?php echo $dataLive['linkads'] ?>" target="_blank"><img src="<?php echo base_url('uploads/') . $dataLive['ads'] ?>" alt="AdsLive" style="width: 100%;border-radius: 10px;border-style: solid;border-color:yellow"></a>
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php } ?>
                             </div>
                             <video autoplay="true" id="my-video" class="video-js embed-responsive-item" controls preload="auto" poster="<?php echo base_url('uploads/') . $dataLive['img'] ?>" data-setup="{}">
                                 <source src="<?php echo $dataLive['link'] ?>" type="application/x-mpegURL" />

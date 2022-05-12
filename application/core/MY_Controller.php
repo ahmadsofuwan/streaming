@@ -216,21 +216,19 @@ class MY_Controller extends CI_Controller
                         $_POST[$value][$item] = $refkey;
 
                     if (is_array($value) && $value[1] == 'date') {
-                        $_POST[$value[0]] = strtotime($_POST[$value[0]]);
+                        $_POST[$value[0]][$item] = strtotime($_POST[$value[0]][$item]);
                         $value = $value[0];
                     }
 
                     if (is_array($value) && $value[1] == 'number') {
-                        $_POST[$value[0]] = str_replace(",", "", $_POST[$value[0]]);
+                        $_POST[$value[0]][$item] = str_replace(",", "", $_POST[$value[0]][$item]);
                         $value = $value[0];
                     }
 
                     if (is_array($value) && $value[1] == 'md5') {
-                        $_POST[$value[0]] = md5($_POST[$value[0]]);
+                        $_POST[$value[0]][$item] = md5($_POST[$value[0]][$item]);
                         $value = $value[0];
                     }
-
-
 
                     $dataDetail[$key] = $_POST[$value][$item];
                 }
@@ -242,7 +240,7 @@ class MY_Controller extends CI_Controller
     public function updateDetail($tableDetail, $formDetail, $detailRef, $id)
     {
         if (!empty($tableDetail) && !empty(count($tableDetail))) {
-            $oldDataDetail = $this->getDataRow($tableDetail, 'pkey', $detailRef . '=' . $_POST['pkey']);
+            $oldDataDetail = $this->getDataRow($tableDetail, 'pkey', array($detailRef => $_POST['pkey']));
             foreach ($_POST['detailKey'] as $i => $value) {
                 if (!empty($_POST['detailKey'][$i])) {
                     $status = false;
@@ -264,9 +262,14 @@ class MY_Controller extends CI_Controller
                         $_POST[$value][$i] = $id;
 
                     if (is_array($value) && $value[1] == 'number') {
-                        $_POST[$value[0]] = str_replace(",", "", $_POST[$value[0]]);
+                        $_POST[$value[0]][$i] = str_replace(",", "", $_POST[$value[0]][$i]);
                         $value = $value[0];
                     }
+                    if (is_array($value) && $value[1] == 'date') {
+                        $_POST[$value[0]][$i] = strtotime($_POST[$value[0]][$i]);
+                        $value = $value[0];
+                    }
+
                     $dataDetail[$key] = $_POST[$value][$i];
                 }
                 if (empty($_POST['detailKey'][$i])) {

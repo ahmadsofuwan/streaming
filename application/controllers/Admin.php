@@ -117,103 +117,6 @@ class Admin extends MY_Controller
 		$this->template($data);
 	}
 
-	public function adsLiveList()
-	{
-		$tableName = 'adslive';
-		$join = array(
-			array('account', 'account.pkey=' . $tableName . '.createon', 'left'),
-			array('role', 'role.pkey=account.role', 'left'),
-		);
-		$select = '
-			' . $tableName . '.*,
-			account.name as createname,
-			account.role as createrole,
-			role.name as rolename,
-		';
-
-
-		$dataList = $this->getDataRow($tableName, $select, '', '', $join);
-		$data['html']['title'] = 'List Ads';
-		$data['html']['dataList'] = $dataList;
-		$data['html']['tableName'] = $tableName;
-		$data['html']['form'] = get_class($this) . '/adsLive';
-		$data['url'] = 'admin/adsList';
-		$this->template($data);
-	}
-
-	public function adsLive($id = '')
-	{
-		$tableName = 'adslive';
-		$tableDetail = '';
-		$baseUrl = get_class($this) . '/' . __FUNCTION__;
-		$detailRef = '';
-		$formData = array(
-			'pkey' => 'pkey',
-			'name' => 'name',
-			'createon' => 'sesionid',
-			'time' => 'time',
-			'link' => 'link',
-		);
-		$formDetail = array();
-
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			if (empty($_POST['action'])) redirect(base_url($baseUrl . 'List'));
-			//validate form
-			$arrMsgErr = array();
-			if (empty($_POST['name']))
-				array_push($arrMsgErr, 'Nama Wajib Di isi');
-
-
-			if ($_POST['action'] == 'add')
-				if (empty($_FILES['imgAds']['name']))
-					array_push($arrMsgErr, "Gambar wajib Di isi");
-
-			$this->session->set_flashdata('arrMsgErr', $arrMsgErr);
-			//validate form
-			if (empty(count($arrMsgErr)))
-				switch ($_POST['action']) {
-					case 'add':
-						$refkey = $this->insert($tableName, $this->dataForm($formData));
-						$this->insertDetail($tableDetail, $formDetail, $refkey);
-						$upload = array(
-							'postname' => 'imgAds',
-							'tablename' => $tableName,
-							'colomname' => 'img',
-							'pkey' => $refkey,
-						);
-						$this->uploadImg($upload);
-						redirect(base_url($baseUrl . 'List')); //wajib terakhir
-						break;
-					case 'update':
-						$this->update($tableName, $this->dataForm($formData), array('pkey' => $_POST['pkey']));
-						$this->updateDetail($tableDetail, $formDetail, $detailRef, $id);
-						if (!empty($_FILES['imgAds']['name'])) {
-							$upload = array(
-								'postname' => 'imgAds',
-								'tablename' => $tableName,
-								'colomname' => 'img',
-								'pkey' => $_POST['pkey'],
-								'replace' => true,
-							);
-							$this->uploadImg($upload);
-						}
-						redirect(base_url($baseUrl . 'List'));
-						break;
-				}
-		}
-
-		if (!empty($id)) {
-			$dataRow = $this->getDataRow($tableName, '*', array('pkey' => $id), 1)[0];
-			$this->dataFormEdit($formData, $dataRow);
-		}
-
-		$data['html']['baseUrl'] = $baseUrl;
-		$data['html']['title'] = 'Input Data Iklan Live';
-		$data['html']['err'] = $this->genrateErr();
-		$data['url'] = 'admin/adsForm';
-		$this->template($data);
-	}
-
 	public function liveList()
 	{
 		$tableName = 'live';
@@ -241,17 +144,22 @@ class Admin extends MY_Controller
 	public function live($id = '')
 	{
 		$tableName = 'live';
-		$tableDetail = '';
+		$tableDetail = 'detail_live';
 		$baseUrl = get_class($this) . '/' . __FUNCTION__;
-		$detailRef = '';
+		$detailRef = 'refkey';
 		$formData = array(
 			'pkey' => 'pkey',
 			'name' => 'name',
 			'createon' => 'sesionid',
 			'time' => 'time',
 			'link' => 'link',
+			'linkads' => 'linkAds',
 		);
-		$formDetail = array();
+		$formDetail = array(
+			'refkey' => 'refkey',
+			'name' => 'detailName',
+			'datetime' => array('dateTime', 'date'),
+		);
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			if (empty($_POST['action'])) redirect(base_url($baseUrl . 'List'));
@@ -264,7 +172,14 @@ class Admin extends MY_Controller
 			if ($_POST['action'] == 'add')
 				if (empty($_FILES['img']['name']))
 					array_push($arrMsgErr, "Logo wajib Di isi");
-
+			if ($_POST['action'] == 'add')
+				if (empty($_FILES['adsImg']['name']))
+					array_push($arrMsgErr, "Logo wajib Di isi");
+			foreach ($_POST['detailKey'] as $key => $value) {
+				if (empty($_POST['detailKey'][$key]) && empty($_POST['detailName'][$key])) {
+					unset($_POST['detailKey'][$key]);
+				}
+			}
 			$this->session->set_flashdata('arrMsgErr', $arrMsgErr);
 			//validate form
 			if (empty(count($arrMsgErr)))
@@ -277,6 +192,14 @@ class Admin extends MY_Controller
 							'tablename' => $tableName,
 							'colomname' => 'img',
 							'pkey' => $refkey,
+						);
+						$this->uploadImg($upload);
+						$upload = array(
+							'postname' => 'adsImg',
+							'tablename' => $tableName,
+							'colomname' => 'ads',
+							'pkey' => $refkey,
+							'loop' => '_ads',
 						);
 						$this->uploadImg($upload);
 						redirect(base_url($baseUrl . 'List')); //wajib terakhir
@@ -294,6 +217,17 @@ class Admin extends MY_Controller
 							);
 							$this->uploadImg($upload);
 						}
+						if (!empty($_FILES['adsImg']['name'])) {
+							$upload = array(
+								'postname' => 'adsImg',
+								'tablename' => $tableName,
+								'colomname' => 'ads',
+								'pkey' => $_POST['pkey'],
+								'replace' => true,
+								'loop' => '_ads',
+							);
+							$this->uploadImg($upload);
+						}
 						redirect(base_url($baseUrl . 'List'));
 						break;
 				}
@@ -302,6 +236,9 @@ class Admin extends MY_Controller
 		if (!empty($id)) {
 			$dataRow = $this->getDataRow($tableName, '*', array('pkey' => $id), 1)[0];
 			$this->dataFormEdit($formData, $dataRow);
+			// detail
+			$dataDetail = $this->getDataRow('detail_live', '*', array('refkey' => $id));
+			$data['html']['dataDetail'] = $dataDetail;
 		}
 
 		$data['html']['baseUrl'] = $baseUrl;
@@ -721,8 +658,15 @@ class Admin extends MY_Controller
 		switch ($_POST['action']) {
 			case 'delete':
 				switch ($_POST['tbl']) {
+					case 'live':
+						$oldData = $this->getDataRow($_POST['tbl'], '*', array('pkey' => $_POST['pkey']));
+						unlink('./uploads/' . $oldData[0]['img']);
+						unlink('./uploads/' . $oldData[0]['ads']);
+						$this->delete($_POST['tbl'], array('pkey' => $_POST['pkey']));
+						$this->delete('detail_live', array('refkey' => $_POST['pkey']));
+						break;
 					default:
-						$this->delete($_POST['tbl'], 'pkey=' . $_POST['pkey']);
+						$this->delete($_POST['tbl'], array('pkey' => $_POST['pkey']));
 						break;
 				}
 				break;

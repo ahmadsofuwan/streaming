@@ -35,6 +35,67 @@ if ($action == 'update')
 								<input type="file" class="form-control-file" id="img" name="img" accept=".jpg,.png,.jpeg">
 							</div>
 						</div>
+						<div class="form-group row">
+							<label for="adsImg" class="col-sm-3 ">Iklan ads</label>
+							<div class="col-sm-3">
+								<input type="file" class="form-control-file" id="adsImg" name="adsImg" accept=".gif">
+							</div>
+							<div class="col-sm">
+								<input type="text" class="form-control" id="linkAds" name="linkAds">
+							</div>
+						</div>
+
+						<!-- detaile -->
+						<div class="form-group row">
+							<div class="col-sm">
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col">Nama Tanyang</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr <?php echo $display ?>>
+											<input type="hidden" name="detailKey[]">
+											<td>
+												<input type="text" class="form-control" name="detailName[]" placeholder="Nama Tanyang">
+											</td>
+											<td>
+												<input type="datetime-local" class="form-control" name="dateTime[]">
+											</td>
+											<td><b class="text-danger btn closeDetail">X</b></td>
+										</tr>
+										<?php
+										//jika update/edit
+										if ($action == 'update') {
+										?>
+											<?php foreach ($dataDetail as $DetailKey => $detailValue) { ?>
+												<!-- 2022-05-12T02:08 -->
+												<tr>
+													<input type="hidden" name="detailKey[]" value="<?php echo $detailValue['pkey'] ?>">
+													<td>
+														<input type="text" class="form-control" id="name" name="detailName[]" placeholder="Nama Tanyang" value="<?php echo $detailValue['name'] ?>">
+													</td>
+													<td>
+														<input type="datetime-local" class="form-control" name="dateTime[]" value="<?php echo date("Y-m-d", $detailValue['datetime']) . 'T' . date("H:i", $detailValue['datetime']) ?>">
+													</td>
+													<td><b class="text-danger btn closeDetail">X</b></td>
+												</tr>
+											<?php } ?>
+										<?php } //jika update/edit
+										?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td><button type="button" class="btn btn-primary" name="addDetail">Tambah</button></td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+						<!-- detaile -->
+
 						<div class="form-group row mt-5">
 							<div class="col-sm">
 								<button type="submit" class="btn btn-primary btn-block">Submit</button>
